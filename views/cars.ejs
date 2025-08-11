@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>List of Cars</title>
+    <link rel="stylesheet" href="/css/main.css" />
+</head>
+
+<body>
+    <div class="container mx-auto">        
+        <!-- menu -->
+        <div class="navbar bg-base-100 my-6">
+            <div class="flex-1">
+                <a class="btn btn-ghost text-xl" href="/cars">Rent a Car</a>
+            </div>
+            <div class="flex-none">
+                <a class="btn btn-neutral" href="/logout">Logout</a>
+            </div>
+        </div>
+
+        <!--safety check if no cars-->
+         <% if (cars.length === 0) { %>
+        <div class="text-center mt-12">
+            <p class="text-lg text-gray-600">No cars available at the moment.</p>
+        </div>
+        <% } else { %>
+        
+        <!-- main content -->
+        <div class="grid grid-cols-3 gap-4 mt-6">        
+            <% for (let i = 0; i < cars.length; i++) { %>
+            <div class="card bg-base-100 w-96 shadow-xl card-bordered">
+                <figure>
+                    <img 
+                        src="<%= cars[i].imageUrl %>"
+                        alt="<%= cars[i].model %>"/>
+                </figure>
+                <div class="card-body">
+                    <h2 class="card-title"><%= cars[i].model %></h2>
+                    <!--check if the car was not rented-->
+                    <% if (cars[i].renter === undefined || cars[i].renter === null) { %>
+                        <p>Click the button to book this car</p>
+                        <div class="card-actions justify-end">
+                        <a href="/book/<%= cars[i]._id %>" class="btn btn-primary">Book</a>
+                        </div>
+                    <!-- if the car was rented by current user-->
+                    <% } else if (cars[i].renter._id.toString() === currentUser._id.toString()) { %>
+                        <p>Return Date: <%= cars[i].returnDate %></p>
+                        <div class="card-actions justify-end">
+                            <form action="/return/<%= cars[i]._id %>" method="POST" style="display: inline;">
+                                <button type="submit" class="btn btn-secondary">Return</button>
+                            </form>
+                        </div> 
+                    <!-- if rented by other users-->
+                    <% } else { %>
+                        <p class="text-red-600">Unavailable until <%= cars[i].returnDate %></p>
+                    <% } %>
+                </div>
+            </div>
+            <% } %>
+        </div>
+        <% } %>
+    </div>
+</body>
+
+</html>
