@@ -221,7 +221,7 @@ async function startServer() {
         await mongoose.connect(process.env.MONGO_CONNECTION_STRING)
 
         //if db not exists, create 
-        populateDatabase();
+        await populateDatabase();
 
         console.log("SUCCESS connecting to MONGO database")
         console.log("STARTING Express web server")        
@@ -238,5 +238,5 @@ async function startServer() {
 }
 startServer()
 
-
+module.exports = app;
 
