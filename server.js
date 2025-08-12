@@ -26,16 +26,13 @@ app.use(express.static(__dirname + '/public'));
 app.set('views', __dirname + '/views'); //vercel
 app.use(express.urlencoded({ extended: true })); //forms
 
+
 // setup sessions
 const session = require('express-session')
 app.use(session({
    secret: "the quick brown fox jumped over the lazy dog 1234567890",  // random string, used for configuring the session
    resave: false,
-   saveUninitialized: false,
-  store: MongoStore.create({
-    mongoUrl: process.env.MONGO_CONNECTION_STRING,
-    collectionName: "sessions"
-  })
+   saveUninitialized: true
 }))
 
 require("dotenv").config()   
@@ -228,14 +225,11 @@ async function startServer() {
         await populateDatabase();
 
         console.log("SUCCESS connecting to MONGO database")
+        console.log("STARTING Express web server")        
         
-        // Only start the server if we're not in Vercel environment
-        if (process.env.NODE_ENV !== 'production') {
-            console.log("STARTING Express web server")        
-            app.listen(HTTP_PORT, () => {     
-                console.log(`server listening on: http://localhost:${HTTP_PORT}`) 
-            })    
-        }
+        app.listen(HTTP_PORT, () => {     
+            console.log(`server listening on: http://localhost:${HTTP_PORT}`) 
+        })    
     }
     catch (err) {        
         console.log("ERROR: connecting to MONGO database")        
