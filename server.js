@@ -31,7 +31,11 @@ const session = require('express-session')
 app.use(session({
    secret: "the quick brown fox jumped over the lazy dog 1234567890",  // random string, used for configuring the session
    resave: false,
-   saveUninitialized: true
+   saveUninitialized: false,
+  store: MongoStore.create({
+    mongoUrl: process.env.MONGO_CONNECTION_STRING,
+    collectionName: "sessions"
+  })
 }))
 
 require("dotenv").config()   
