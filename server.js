@@ -224,11 +224,14 @@ async function startServer() {
         await populateDatabase();
 
         console.log("SUCCESS connecting to MONGO database")
-        console.log("STARTING Express web server")        
         
-        app.listen(HTTP_PORT, () => {     
-            console.log(`server listening on: http://localhost:${HTTP_PORT}`) 
-        })    
+        // Only start the server if we're not in Vercel environment
+        if (process.env.NODE_ENV !== 'production') {
+            console.log("STARTING Express web server")        
+            app.listen(HTTP_PORT, () => {     
+                console.log(`server listening on: http://localhost:${HTTP_PORT}`) 
+            })    
+        }
     }
     catch (err) {        
         console.log("ERROR: connecting to MONGO database")        
